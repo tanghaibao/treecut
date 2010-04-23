@@ -18,6 +18,12 @@ import newick.tree
 from statlib.stats import lttest_ind, lmean 
 
 class ExtTree:
+    """
+    This is similar to the newick.tree.Tree, but each node has an associated P-value
+    this allows propagation of P-values either ascending or descending the tree.
+
+    """
+
     def __init__(self, node):
         self.node = node
         self.edges = []
@@ -30,7 +36,8 @@ class ExtTree:
         b = [values[x] for x in oset]
         self.a, self.b = a, b
         self.val = self.hi_min = self.lo_min = 1.0
-        if a and b: self.val = lttest_ind(a,b)[1]
+        if a and b: 
+            self.val = lttest_ind(a,b)[1]
 
     def __str__(self):
         return "%d\t%d\t%.1f\t%.1f\t%.1g\t%.1g\t%.1g" % (\
@@ -74,8 +81,7 @@ class ExtTree:
 if __name__ == '__main__':
 
     from optparse import OptionParser
-    parser = OptionParser(usage="%prog [-t] treefile [-f] listfile", 
-            version="%prog 0.1")
+    parser = OptionParser(usage="%prog [-t] treefile [-f] listfile\n" + __doc__) 
     parser.add_option("-t", "--treefile", type="str", 
             help="Newick-format tree file")
     parser.add_option("-f", "--listfile", type="str", 
