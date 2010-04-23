@@ -17,7 +17,7 @@ import newick
 import newick.tree
 from statlib.stats import lttest_ind, lmean 
 
-class ExtTree:
+class ExtTree(list):
     """
     This is similar to the newick.tree.Tree, but each node has an associated P-value
     this allows propagation of P-values either ascending or descending the tree.
@@ -26,10 +26,9 @@ class ExtTree:
 
     def __init__(self, node):
         self.node = node
-        self.edges = []
         for n,b,l in node.get_edges():
             if not isinstance(n, newick.tree.Leaf):
-                self.edges.append(ExtTree(n))
+                self.append(ExtTree(n))
         nset = set(node.get_leaves_identifiers())
         oset = all - nset
         a = [values[x] for x in nset]
@@ -46,7 +45,7 @@ class ExtTree:
         
     def get_all_children(self):
         res = []
-        for e in self.edges:
+        for e in self:
             res.append(e)
             res += e.get_all_children()
         return res
@@ -57,24 +56,23 @@ class ExtTree:
             print >>filehandle, "%d\t%s" % (i, e)
 
     def print_candidate(self, filehandle, cutoff=.05):
-        if self.val<min(self.lo_min, self.hi_min, cutoff):
-            if lmean(self.a)<lmean(self.b): desc = "lo"
-            else: desc = "hi"
-            filehandle.write("%s\t%s\t%.1f\t%.1g\n"%(\
+        if self.val < min(self.lo_min, self.hi_min, cutoff):
+            desc = "lo" if lmean(self.a) < lmean(self.b) else "hi" 
+            print >>filehandle, "%s\t%s\t%.1f\t%.1g" % (
                 ",".join(self.node.get_leaves_identifiers()), desc,
-                lmean(self.a), self.val))
-        for e in self.edges:
+                lmean(self.a), self.val)
+        for e in self:
             e.print_candidate(filehandle)
 
     def himin(self):
-        for e in self.edges:
+        for e in self:
             e.hi_min = min(self.val, self.hi_min)
             e.himin()
 
     def lomin(self):
-        if self.edges: 
-            self.lo_min = min([x.lomin() for x in self.edges] +\
-                    [x.val for x in self.edges])
+        if len(self)!=0: 
+            self.lo_min = min([x.lomin() for x in self] +\
+                    [x.val for x in self])
         return self.lo_min
 
 
@@ -112,9 +110,9 @@ if __name__ == '__main__':
     for row in fp:
         a,b = row.split()
         values[a] = float(b)
-    n, m = len(all), len(values.keys())
+    n, m = len(all), len(values)
     assert n==m, \
-            "number of OTUs don't match between treefile(%d) and listfile(%d)"%(n,m)
+            "number of OTUs don't match between treefile(%d) and listfile(%d)" % (n, m)
 
     # generate output
     fw = sys.stdout
