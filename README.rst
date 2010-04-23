@@ -1,5 +1,14 @@
 Dynamic tree cut algorithm
 ==========================
+
+:Author: Haibao Tang (tanghaibao)
+:Email: bao@uga.edu
+:License: BSD
+
+.. contents ::
+
+Description
+------------
 Hierarchical clustering is an important tool in mining useful relationships among multivariate biological data. However, there is no obvious way to define a set of useful, non-overlapping groups from the identified hierarchy. Most efforts have focused on different cut-off values, evaluate the relative strengths of intra- versus inter- group variances and then heuristically determine a "good" cutoff. This study introduces a more dynamic approach that extracts clades that are significantly enriched or different from other clades. Incorporating phylogenetic information removes the false positives observed in a conventional analysis thus improves the prediction of trait association.
 
 The algorithm takes two inputs, a tree model and some mapping of values for all the terminal branches. Briefly, the algorithm performs independent statistical tests on all the internal branches, and calculates the P-values for each node. At exploratory stage, the statistical tests are: 1) for quantitative values, test the difference of two groups separated by each node (student.s t-test); 2) for categorical values, test the association of a particular category for the descendants of each internal node (Fisher's exact test).
@@ -7,8 +16,12 @@ The algorithm takes two inputs, a tree model and some mapping of values for all 
 The candidate nodes are determined using the following rule: the P-value for the candidate node v has to be the smallest among all root-to-leaf paths that pass v. In other words, the group rooted at node v should contain the largest level of association, thus avoiding redundant clades. 
 
 
+Installation
+------------
+- Python version >= 2.6
+
 Usage
-=====
+------
 Following installation, run::
     
     dynamic_treecut.py -t treefile -f listfile

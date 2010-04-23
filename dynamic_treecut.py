@@ -11,6 +11,7 @@ the nodes that gives the least P-value
 """
 
 import os
+import os.path as op
 import sys
 import newick
 import newick.tree
@@ -43,7 +44,7 @@ class ExtTree:
             res += e.get_all_children()
         return res
 
-    def print_node(self, filehandle):
+    def print_all_nodes(self, filehandle):
         all_nodes = self.get_all_children()
         for i, e in enumerate(all_nodes):
             print >>filehandle, "%d\t%s" % (i, e)
@@ -87,12 +88,12 @@ if __name__ == '__main__':
 
     if not options.treefile:
         parser.error("You must specify -t")
-    elif not os.path.exists(options.treefile):
-        parser.error("FILE %s not found"%options.treefile)
+    elif not op.exists(options.treefile):
+        parser.error("File %s not found" % options.treefile)
     if not options.listfile:
         parser.error("You must specify -f")
-    elif not os.path.exists(options.listfile):
-        parser.error("FILE %s not found"%options.listfile)
+    elif not op.exists(options.listfile):
+        parser.error("File %s not found" % options.listfile)
 
     fp = file(options.treefile)
     data = fp.read()
@@ -117,7 +118,7 @@ if __name__ == '__main__':
     if options.printall:
         fw.write("node_id\tmember_mean\tnon-member_mean\tP-value\t"
                 "min_ancestor_P-value\tmin_descendant_P-value\n") # header
-        t.print_node(fw)
+        t.print_all_nodes(fw)
     else:
         t.print_candidate(fw, cutoff=options.cutoff)
     fw.close()
