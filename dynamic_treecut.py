@@ -12,18 +12,16 @@ the nodes that gives the least P-value
 
 import os
 import sys
-from optparse import OptionParser
-from newick import *
-from newick.tree import *
-from statlib.stats import *
+import newick
+import newick.tree
+from statlib.stats import lttest_ind, lmean 
 
-j = 0
 class ExtTree:
     def __init__(self, node):
         self.node = node
         self.edges = []
         for n,b,l in node.get_edges():
-            if not isinstance(n, Leaf):
+            if not isinstance(n, newick.tree.Leaf):
                 self.edges.append(ExtTree(n))
         nset = set(node.get_leaves_identifiers())
         oset = all - nset
@@ -32,19 +30,26 @@ class ExtTree:
         self.a, self.b = a, b
         self.val = self.hi_min = self.lo_min = 1.0
         if a and b: self.val = lttest_ind(a,b)[1]
-        
-    def print_node(self, filehandle):
-        global j
-        if j!=0:
-            filehandle.write("node%d\t%d\t%d\t%.1f\t%.1f\t%.1g\t%.1g\t%.1g\n"%(\
-                j, len(self.a), len(self.b), lmean(self.a), lmean(self.b), \
-                self.val, self.hi_min, self.lo_min))
-        j+=1
-        for e in self.edges:
-            e.print_node(filehandle)
 
-    def print_candidate(self, filehandle):
-        if self.val<min(self.lo_min, self.hi_min, options.cutoff):
+    def __str__(self):
+        return "%d\t%d\t%.1f\t%.1f\t%.1g\t%.1g\t%.1g" % (\
+                len(self.a), len(self.b), lmean(self.a), lmean(self.b), \
+                self.val, self.hi_min, self.lo_min)
+        
+    def get_all_children(self):
+        res = []
+        for e in self.edges:
+            res.append(e)
+            res += e.get_all_children()
+        return res
+
+    def print_node(self, filehandle):
+        all_nodes = self.get_all_children()
+        for i, e in enumerate(all_nodes):
+            print >>filehandle, "%d\t%s" % (i, e)
+
+    def print_candidate(self, filehandle, cutoff=.05):
+        if self.val<min(self.lo_min, self.hi_min, cutoff):
             if lmean(self.a)<lmean(self.b): desc = "lo"
             else: desc = "hi"
             filehandle.write("%s\t%s\t%.1f\t%.1g\n"%(\
@@ -67,6 +72,7 @@ class ExtTree:
 
 if __name__ == '__main__':
 
+    from optparse import OptionParser
     parser = OptionParser(usage="%prog [-t] treefile [-f] listfile", 
             version="%prog 0.1")
     parser.add_option("-t", "--treefile", type="str", 
@@ -90,7 +96,7 @@ if __name__ == '__main__':
 
     fp = file(options.treefile)
     data = fp.read()
-    tree = parse_tree(data)
+    tree = newick.parse_tree(data)
     all = set(tree.get_leaves_identifiers())  # terminal nodes
 
     # value mappings
@@ -104,8 +110,6 @@ if __name__ == '__main__':
             "number of OTUs don't match between treefile(%d) and listfile(%d)"%(n,m)
 
     # generate output
-    #out = "nodes.tab"
-    #fw = file(out,"w")
     fw = sys.stdout
     t = ExtTree(tree)
     t.himin()
@@ -115,5 +119,5 @@ if __name__ == '__main__':
                 "min_ancestor_P-value\tmin_descendant_P-value\n") # header
         t.print_node(fw)
     else:
-        t.print_candidate(fw)
+        t.print_candidate(fw, cutoff=options.cutoff)
     fw.close()
