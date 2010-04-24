@@ -12,15 +12,16 @@ the nodes that gives the least P-value
 import os
 import os.path as op
 import sys
-import newick
-import newick.tree
+import ete2
+
 try:
     from numpy import mean as lmean
     from scipy.stats.stats import ttest_ind as lttest_ind
 except:
-    from statlib.stats import lttest_ind, lmean 
-finally:
-    print >>sys.stderr, "Install either statlib or scipy for statistics calculations"
+    try:
+        from statlib.stats import lttest_ind, lmean 
+    except:
+        print >>sys.stderr, "Install either scipy or statlib for statistics calculations"
 
 
 class ExtTree(list):
@@ -31,11 +32,11 @@ class ExtTree(list):
 
     def __init__(self, node, values, all):
         self.node = node
-        for n,b,l in node.get_edges():
-            if not isinstance(n, newick.tree.Leaf):
+        for n in node.get_children():
+            if not n.is_leaf():
                 self.append(ExtTree(n, values, all))
 
-        nset = set(node.get_leaves_identifiers())
+        nset = set(node.iter_leaves())
         oset = all - nset
 
         # values for the direct children
@@ -60,7 +61,7 @@ class ExtTree(list):
             if x not in leaf_set:
                 print >>sys.stderr, "%s missing in listfile" % x
             else:
-                res.append(values[x])
+                res.append(values[x.name])
         return res
 
 
@@ -82,7 +83,7 @@ class ExtTree(list):
         if self.val < min(self.lo_min, self.hi_min, cutoff):
             desc = "lo" if lmean(self.a) < lmean(self.b) else "hi" 
             print >>filehandle, "%s\t%s\t%.1f\t%.1g" % (
-                ",".join(self.node.get_leaves_identifiers()), desc,
+                ",".join(x.name for x in self.node.get_leaves()), desc,
                 lmean(self.a), self.val)
 
         for e in self:
@@ -127,10 +128,8 @@ if __name__ == '__main__':
     elif not op.exists(options.listfile):
         parser.error("File %s not found" % options.listfile)
 
-    fp = file(options.treefile)
-    data = fp.read()
-    tree = newick.parse_tree(data)
-    all = set(tree.get_leaves_identifiers())  # terminal nodes
+    tree = ete2.Tree(options.treefile)
+    all = set(tree.iter_leaves())  # terminal nodes
 
     # value mappings
     fp = file(options.listfile)

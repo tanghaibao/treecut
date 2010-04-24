@@ -28,7 +28,9 @@ Installation
     
     easy_install fisher
 
-- `newick <http://www.daimi.au.dk/~mailund/newick.html>`_ for parsing the tree structure.
+- `ete2 <http://ete.cgenomics.org>`_ for parsing the tree structure::
+
+    easy_install ete2
 
 
 Usage
