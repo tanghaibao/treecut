@@ -20,11 +20,15 @@ Installation
 ------------
 - Python version >= 2.6
 
-- For convenience, this package ships with two third-party python libraries: `python-statlib <http://code.google.com/p/python-statlib/>`_ and `newick <http://www.daimi.au.dk/~mailund/newick.html>`_. But note that these libraries are maintained elsewhere.
+- `python-statlib <http://code.google.com/p/python-statlib/>`_ module for t-test:: 
 
+    easy_install statlib
+  
 - `fisher <http://pypi.python.org/pypi/fisher/>`_ module for calculating Fisher's exact test::
     
     easy_install fisher
+
+- `newick <http://www.daimi.au.dk/~mailund/newick.html>`_ for parsing the tree structure.
 
 
 Usage
