@@ -14,7 +14,14 @@ import os.path as op
 import sys
 import newick
 import newick.tree
-from statlib.stats import lttest_ind, lmean 
+try:
+    from numpy import mean as lmean
+    from scipy.stats.stats import ttest_ind as lttest_ind
+except:
+    from statlib.stats import lttest_ind, lmean 
+finally:
+    print >>sys.stderr, "Install either statlib or scipy for statistics calculations"
+
 
 class ExtTree(list):
     """
@@ -32,15 +39,14 @@ class ExtTree(list):
         oset = all - nset
 
         # values for the direct children
-        self.a = self.get_values(nset, values)
+        self.a = a = self.get_values(nset, values)
         # values for non-children (sibs) 
-        self.b = self.get_values(oset, values)
+        self.b = b = self.get_values(oset, values)
 
         self.val = self.hi_min = self.lo_min = 1.0
 
         if a and b: 
-            self.val = lttest_ind(a,b)[1]
-
+            self.val = lttest_ind(a, b)[1]
 
     def __str__(self):
         return "%d\t%d\t%.1f\t%.1f\t%.1g\t%.1g\t%.1g" % (\

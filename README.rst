@@ -20,7 +20,7 @@ Installation
 ------------
 - Python version >= 2.6
 
-- `python-statlib <http://code.google.com/p/python-statlib/>`_ module for t-test:: 
+- `scipy <http://www.scipy.org/>` or `python-statlib <http://code.google.com/p/python-statlib/>`_ module for t-test::
 
     easy_install statlib
   
