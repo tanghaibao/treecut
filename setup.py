@@ -5,7 +5,7 @@ from distutils.core import setup #, Extension
 
 
 setup(
-      name="dynamic-treecut",
-      packages=['dynamic-treecut'],
-      requires=['fisher'],
+      name="treecut",
+      packages=['treecut'],
+      requires=['fisher', 'ete2', 'statlib'],
       )
