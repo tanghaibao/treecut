@@ -35,9 +35,9 @@ Installation
 
 Usage
 ------
-Following installation, run::
+To run the software::
     
-    python dynamic_treecut.py -t data/treefile -f data/listfile
+    python treecut.py data/treefile data/listfile
 
 Results will be written to ``stdout``. Each row will contain a subclade that show either significantly high phenotypic value or low phenotypic value.
 
@@ -45,6 +45,6 @@ Take a look at examples in the ``data/`` folder: ``treefile`` and ``listfile``.
 
 The ``treefile`` should be a `Newick-formatted <http://en.wikipedia.org/wiki/Newick_format>`_ file (typically from the output of a phylogenetic reconstruction software, e.g. `phylip <http://evolution.genetics.washington.edu/phylip.html>`_ or `MEGA <http://www.megasoftware.net/>`_).
 
-The ``listfile`` should contain the quantitative value for each taxon. Make sure that the taxon names match between ``treefile`` and ``listfile``.
+The ``listfile`` should contain the quantitative value for each taxon (separated by comma). Make sure that the taxon names match between ``treefile`` and ``listfile``.
 
 

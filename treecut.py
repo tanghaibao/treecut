@@ -2,7 +2,10 @@
 # -*- coding: UTF-8 -*-
 
 """
-Author: Haibao Tang <bao@uga.edu>
+python %prog treefile listfile
+
+treefile is a Newick-formatted file
+listfile contains the accession=>value mapping, separated by comma
 
 Python script that traverses through a hierarchical clustering tree
 and calculate the significance values on all inner nodes and determine
@@ -15,40 +18,38 @@ import ete2
 from treecut.tree import ExtTree
 
 
+def read_values(listfile):
+    import csv
+    reader = csv.reader(file(listfile))
+    reader.next() # header
+    return dict((acc, float(value)) for (acc, value) in reader)
+
+
 if __name__ == '__main__':
 
     from optparse import OptionParser
 
-    parser = OptionParser(usage="%prog [-t] treefile [-f] listfile\n" + __doc__) 
-    parser.add_option("-t", "--treefile", type="str", 
-            help="Newick-format tree file")
-    parser.add_option("-f", "--listfile", type="str", 
-            help="two-column mapping from OTUs to values")
-    parser.add_option("-c", "--cutoff", type="float", 
+    p = OptionParser(__doc__) 
+    p.add_option("--cutoff", type="float", 
             default=.01, help="minimum P-value to report [default:%default]")
-    parser.add_option("-v", "--printall", action="store_true", default=False,
+    p.add_option("--printall", action="store_true", default=False,
             help="print verbose information for all inner nodes [default:%default]")
-    options, args = parser.parse_args()
+    options, args = p.parse_args()
 
-    if not options.treefile:
-        parser.error("You must specify -t")
-    elif not op.exists(options.treefile):
-        parser.error("File %s not found" % options.treefile)
-    if not options.listfile:
-        parser.error("You must specify -f")
-    elif not op.exists(options.listfile):
-        parser.error("File %s not found" % options.listfile)
+    if len(args) != 2:
+        sys.exit(p.print_help())
 
-    tree = ete2.Tree(options.treefile)
-    #tree.render("render.pdf")
+    treefile, listfile = args
+    
+    for f in (treefile, listfile):
+        if not op.exists(f):
+            parser.error("File %s not found" % f)
+
+    # the tree topology
+    tree = ete2.Tree(treefile)
     all = set(tree.iter_leaves())  # terminal nodes
-
     # value mappings
-    fp = file(options.listfile)
-    values = {}
-    for row in fp:
-        a, b = row.split()
-        values[a] = float(b)
+    values = read_values(listfile)
     n, m = len(all), len(values)
     if n!=m:
         print >>sys.stderr, "[warning] number of OTUs don't match between treefile(%d) and listfile(%d)" % (n, m)
@@ -56,8 +57,7 @@ if __name__ == '__main__':
     # generate output
     fw = sys.stdout
     t = ExtTree(tree, values, all)
-    t.himin()
-    t.lomin()
+
     if options.printall:
         # header
         print >>fw, ("node_id member_mean non-member_mean P-value " 

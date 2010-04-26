@@ -1,4 +1,4 @@
 #!/bin/bash
 
-treecut.py -t data/treefile -f data/listfile
-#treecut.py -t data/treefile -f data/listfile --printall
+treecut.py data/treefile data/listfile --cutoff .01
+#treecut.py data/treefile data/listfile --printall

@@ -26,6 +26,7 @@ class ExtTree(list):
 
     def __init__(self, node, values, all):
         self.node = node
+        self.values = values
         for n in node.children:
             if not n.is_leaf():
                 self.append(ExtTree(n, values, all))
@@ -43,6 +44,11 @@ class ExtTree(list):
         if a and b: 
             self.val = lttest_ind(a, b)[1]
 
+        # core dynamic programming
+        self.lomin()
+        self.himin()
+
+
     def __str__(self):
         return "%d\t%d\t%.1f\t%.1f\t%.1g\t%.1g\t%.1g" % (\
                 len(self.a), len(self.b), lmean(self.a), lmean(self.b), \
@@ -59,28 +65,35 @@ class ExtTree(list):
         return res
 
 
-    def get_all_children(self):
+    def get_all_nodes(self):
         res = []
         for e in self:
             res.append(e)
-            res += e.get_all_children()
+            res += e.get_all_nodes()
         return res
 
 
+    def get_candidates(self, cutoff=.05):
+        candidates = []
+        for e in self:
+            if e.val < min(e.lo_min, e.hi_min, cutoff):
+                candidates.append(e)
+            else:
+                candidates += e.get_candidates(cutoff=cutoff)
+        return candidates
+
+
     def print_all_nodes(self, filehandle):
-        for i, e in enumerate(self.get_all_children()):
+        for i, e in enumerate(self.get_all_nodes()):
             print >>filehandle, "%d\t%s" % (i, e)
 
 
     def print_candidate(self, filehandle, cutoff=.05):
-        if self.val < min(self.lo_min, self.hi_min, cutoff):
-            desc = "lo" if lmean(self.a) < lmean(self.b) else "hi" 
+        for i, e in enumerate(self.get_candidates(cutoff=cutoff)):
+            desc = "lo" if lmean(e.a) < lmean(e.b) else "hi" 
             print >>filehandle, "%s\t%s\t%.1f\t%.1g" % (
-                ",".join(x.name for x in self.node.get_leaves()), desc,
-                lmean(self.a), self.val)
-
-        for e in self:
-            e.print_candidate(filehandle)
+                ",".join(x.name for x in e.node.get_leaves()), desc,
+                lmean(e.a), e.val)
 
 
     def himin(self):
