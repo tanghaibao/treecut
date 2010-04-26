@@ -21,8 +21,9 @@ class Dendrogram:
 
         fig = plt.figure(1, (8,8))
         root = fig.add_axes([0,0,1,1])
+        tree_ax = fig.add_axes([0,.5,1,.5])
 
-        self.draw_tree()
+        self.draw_tree(tree_ax)
         self.draw_values()
         self.draw_modules()
 
@@ -37,15 +38,13 @@ class Dendrogram:
         pass
     
 
-    def draw_tree(self):
+    def draw_tree(self, ax):
 
-        tree_ax = fig.add_axes
         farthest, max_dist = self.tree.node.get_farthest_node()
-
         # scale the tree so that the height is about .9
         scale = .9 / max_dist
 
-        _clear_ax(tree_ax)
+        _clear_ax(ax)
 
     
     def draw_values(self):

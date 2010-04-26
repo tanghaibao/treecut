@@ -37,7 +37,7 @@ Usage
 ------
 To run the software::
     
-    python treecut.py data/treefile data/listfile
+    python treecut.py data/tree.nwk data/continuous.csv
 
 Results will be written to ``stdout``. Each row will contain a subclade that show either significantly high phenotypic value or low phenotypic value.
 

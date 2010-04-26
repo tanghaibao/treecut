@@ -11,6 +11,7 @@ this allows easy propagation of P-values either ascending or descending the tree
 import os.path as op
 import sys
 import ete2
+import fisher
 
 try:
     from numpy import mean as lmean
@@ -24,12 +25,13 @@ except:
 
 class ExtTree(list):
 
-    def __init__(self, node, values, all):
+    def __init__(self, node, values, all, datatype="continuous"):
+
         self.node = node
         self.values = values
         for n in node.children:
             if not n.is_leaf():
-                self.append(ExtTree(n, values, all))
+                self.append(ExtTree(n, values, all, datatype=datatype))
 
         nset = set(node.iter_leaves())
         oset = all - nset
@@ -42,7 +44,7 @@ class ExtTree(list):
         self.val = self.hi_min = self.lo_min = 1.0
 
         if a and b: 
-            self.val = lttest_ind(a, b)[1]
+            self.val = self.stat_test(a, b, datatype=datatype)
 
         # core dynamic programming
         self.lomin()
@@ -54,6 +56,16 @@ class ExtTree(list):
                 len(self.a), len(self.b), lmean(self.a), lmean(self.b), \
                 self.val, self.hi_min, self.lo_min)
         
+    
+    def stat_test(self, a, b, datatype="continuous"):
+        if datatype=="continuous":
+            return lttest_ind(a, b)[1]
+        else:
+            #print >>sys.stderr, "treating the values as discrete types .."
+            a1, b1 = a.count(1), b.count(1)
+            a0, b0 = a.count(0), b.count(0)
+            return fisher.pvalue(a1, a0, b1, b0).two_tail
+
 
     def render(self, image_name, **kwargs):
         from draw import Dendrogram
