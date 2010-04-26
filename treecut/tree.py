@@ -54,7 +54,14 @@ class ExtTree(list):
                 len(self.a), len(self.b), lmean(self.a), lmean(self.b), \
                 self.val, self.hi_min, self.lo_min)
         
-    
+
+    def render(self, image_name, **kwargs):
+        from draw import Dendrogram
+        d = Dendrogram(self)
+        d.savefig(image_name, **kwargs)
+        print >>sys.stderr, "tree image saved to %s" % image_name
+
+
     def get_values(self, leaf_set, values):
         res = []
         for x in leaf_set:
@@ -107,6 +114,4 @@ class ExtTree(list):
             self.lo_min = min([x.lomin() for x in self] +\
                     [x.val for x in self])
         return self.lo_min
-
-
 

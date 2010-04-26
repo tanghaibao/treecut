@@ -65,3 +65,5 @@ if __name__ == '__main__':
         t.print_all_nodes(fw)
     else:
         t.print_candidate(fw, cutoff=options.cutoff)
+
+    t.render("tree.pdf")
