@@ -73,9 +73,9 @@ class ExtTree(list):
             return fisher.pvalue(a1, a0, b1, b0).two_tail
 
 
-    def render(self, image_name, **kwargs):
+    def render(self, image_name, cutoff=.05, **kwargs):
         from draw import Dendrogram
-        d = Dendrogram(self)
+        d = Dendrogram(self, cutoff=cutoff)
         d.savefig(image_name, **kwargs)
         print >>sys.stderr, "tree image saved to %s" % image_name
 
@@ -98,14 +98,14 @@ class ExtTree(list):
         return res
 
 
-    def get_candidates(self, cutoff=.05):
-        candidates = []
+    def get_modules(self, cutoff=.05):
+        modules = []
         for e in self:
             if e.val < min(e.lo_min, e.hi_min, cutoff):
-                candidates.append(e)
+                modules.append(e)
             else:
-                candidates += e.get_candidates(cutoff=cutoff)
-        return candidates
+                modules += e.get_modules(cutoff=cutoff)
+        return modules
 
 
     def print_all_nodes(self, filehandle):
@@ -113,8 +113,8 @@ class ExtTree(list):
             print >>filehandle, "%d\t%s" % (i, e)
 
 
-    def print_candidate(self, filehandle, cutoff=.05):
-        for i, e in enumerate(self.get_candidates(cutoff=cutoff)):
+    def print_modules(self, filehandle, cutoff=.05):
+        for i, e in enumerate(self.get_modules(cutoff=cutoff)):
             desc = "lo" if lmean(e.a) < lmean(e.b) else "hi" 
             print >>filehandle, "%s\t%s\t%.1f\t%.1g" % (
                 ",".join(e.get_leaf_names()), desc, lmean(e.a), e.val)

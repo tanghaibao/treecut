@@ -35,16 +35,19 @@ Installation
 
 Usage
 ------
-To run the software::
-    
-    python treecut.py data/tree.nwk data/continuous.csv
-
-Results will be written to ``stdout``. Each row will contain a subclade that show either significantly high phenotypic value or low phenotypic value.
-
 Take a look at examples in the ``data/`` folder: ``treefile`` and ``listfile``. 
 
 The ``treefile`` should be a `Newick-formatted <http://en.wikipedia.org/wiki/Newick_format>`_ file (typically from the output of a phylogenetic reconstruction software, e.g. `phylip <http://evolution.genetics.washington.edu/phylip.html>`_ or `MEGA <http://www.megasoftware.net/>`_).
 
 The ``listfile`` should contain the quantitative value for each taxon (separated by comma). Make sure that the taxon names match between ``treefile`` and ``listfile``.
+
+To run the software::
+    
+    python treecut.py data/tree.nwk data/continuous.csv
+
+A summary of extracted modules will be written to ``stdout``. Each row will contain a subclade that show either significantly high phenotypic value or low phenotypic value. Further a visualization is available as ``tree.pdf``. The modules are highlighted in green (low-value modules) and red (high-value modules) colors. 
+
+.. image:: http://lh6.ggpht.com/_srvRoIok9Xs/S9dlPryYuBI/AAAAAAAAA5g/t-khTgGI_CM/s800/tree.png 
+    :alt: tree-value mapping
 
 

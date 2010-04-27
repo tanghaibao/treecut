@@ -68,6 +68,7 @@ if __name__ == '__main__':
                 "min_ancestor_P-value min_descendant_P-value").replace(" ", "\t") 
         t.print_all_nodes(fw)
     else:
-        t.print_candidate(fw, cutoff=options.cutoff)
+        t.print_modules(fw, cutoff=options.cutoff)
 
-    t.render("tree.pdf")
+    #t.render("tree.pdf", cutoff=options.cutoff)
+    t.render("tree.png", dpi=80)
