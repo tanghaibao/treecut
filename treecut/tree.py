@@ -1,16 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
 """
-Author: Haibao Tang <bao@uga.edu>
-
-ExtTree class is similar to the newick.tree.Tree, but each node has an associated P-value
+ExtTree class is similar to the ete2.Tree, but each node has an associated P-value
 this allows easy propagation of P-values either ascending or descending the tree.
 """
 
 import os.path as op
 import sys
-import ete2
 import fisher
 
 try:

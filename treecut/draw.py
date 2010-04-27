@@ -125,7 +125,7 @@ class Dendrogram(object):
             mcolor = "g" if lmean(e.a) < lmean(e.b) else "r"
             accs = e.get_leaf_names()
             xx = xstart + min(self.accessions.index(x) for x in accs) * xinterval
-            width = len(accs) * xinterval
+            width = (len(accs) - 1) * xinterval
             ax.add_patch(Rectangle((xx, ystart), width, 1-ystart, fc=mcolor, alpha=.3, lw=0))
             ax.text(xx+width*.5, ystart-.05, r"$%.1f$" % lmean(e.a), color=mcolor, ha="center", va="top")
             ax.text(xx+width*.5, ystart-.13, r"$(P=%.1g)$" % e.val, color=mcolor, ha="center", va="top")
