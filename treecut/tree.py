@@ -24,6 +24,7 @@ except:
 
 
 class ExtTree(list):
+    __slots__ = ("node", "values", "a", "b", "val", "hi_min", "lo_min")
 
     def __init__(self, node, values, all, datatype="continuous"):
 
@@ -56,6 +57,11 @@ class ExtTree(list):
                 len(self.a), len(self.b), lmean(self.a), lmean(self.b), \
                 self.val, self.hi_min, self.lo_min)
         
+
+    def __getattr__(self, attr):
+        if attr not in self.__slots__:
+            return getattr(self.node, attr)
+
     
     def stat_test(self, a, b, datatype="continuous"):
         if datatype=="continuous":
@@ -111,8 +117,7 @@ class ExtTree(list):
         for i, e in enumerate(self.get_candidates(cutoff=cutoff)):
             desc = "lo" if lmean(e.a) < lmean(e.b) else "hi" 
             print >>filehandle, "%s\t%s\t%.1f\t%.1g" % (
-                ",".join(x.name for x in e.node.get_leaves()), desc,
-                lmean(e.a), e.val)
+                ",".join(e.get_leaf_names()), desc, lmean(e.a), e.val)
 
 
     def himin(self):
@@ -127,3 +132,4 @@ class ExtTree(list):
                     [x.val for x in self])
         return self.lo_min
 
+    
