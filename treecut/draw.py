@@ -43,14 +43,6 @@ class Dendrogram(object):
             clear_ax(a)
 
 
-    def _draw_node(self):
-        pass
-
-
-    def _draw_edge(self):
-        pass
-    
-
     def draw_tree(self, ax):
 
         t = self.tree.node
@@ -98,7 +90,7 @@ class Dendrogram(object):
         ystart = .4 
         xinterval = self.xinterval
 
-        accession_values = np.array([self.values[x] for x in self.accessions])
+        accession_values = np.array([self.values[x] for x in self.accessions], dtype="f")
         min_val, max_val = accession_values.min(), accession_values.max()
         # draw the gauge to the right showing the data range
         gauge, tip = 1-margin*.7, .005
@@ -114,9 +106,9 @@ class Dendrogram(object):
 
         for i, a in enumerate(accession_values):
             xx = xstart + i * xinterval
-            ax.plot((xx, xx), (ystart, ystart + a), "b-")
+            ax.plot((xx, xx), (ystart, ystart + a), "k-")
 
-        ax.text(xstart*.5, .5, "Values", label_style) 
+        ax.text(xstart*.5, .6, "Values", label_style) 
 
     
     def draw_modules(self, ax, cutoff=.05):

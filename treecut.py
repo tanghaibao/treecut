@@ -70,5 +70,5 @@ if __name__ == '__main__':
     else:
         t.print_modules(fw, cutoff=options.cutoff)
 
-    #t.render("tree.pdf", cutoff=options.cutoff)
-    t.render("tree.png", dpi=80)
+    t.render("tree.pdf", cutoff=options.cutoff)
+    #t.render("tree.png", dpi=80)

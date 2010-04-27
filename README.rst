@@ -47,7 +47,6 @@ To run the software::
 
 A summary of extracted modules will be written to ``stdout``. Each row will contain a subclade that show either significantly high phenotypic value or low phenotypic value. Further a visualization is available as ``tree.pdf``. The modules are highlighted in green (low-value modules) and red (high-value modules) colors. 
 
-.. image:: http://lh6.ggpht.com/_srvRoIok9Xs/S9dlPryYuBI/AAAAAAAAA5g/t-khTgGI_CM/s800/tree.png 
+.. image:: http://lh4.ggpht.com/_srvRoIok9Xs/S9dri4z5xHI/AAAAAAAAA5s/OUY1aA9d3Eo/s800/tree.png 
     :alt: tree-value mapping
-
 
