@@ -39,15 +39,15 @@ if __name__ == '__main__':
             help="print verbose information for all inner nodes [default:%default]")
     options, args = p.parse_args()
 
-    if len(args) != 2:
+    if len(args) != 3:
         sys.exit(p.print_help())
 
-    treefile, listfile = args
+    treefile, listfile, outfile = args
     datatype = "discrete" if options.discrete else "continuous"
     
     for f in (treefile, listfile):
         if not op.exists(f):
-            parser.error("File %s not found" % f)
+            p.error("File %s not found" % f)
 
     # the tree topology
     tree = ete2.Tree(treefile)
@@ -70,5 +70,4 @@ if __name__ == '__main__':
     else:
         t.print_modules(fw, cutoff=options.cutoff)
 
-    t.render("tree.pdf", cutoff=options.cutoff)
-    #t.render("tree.png", dpi=80)
+    t.render(outfile, cutoff=options.cutoff, dpi=80)

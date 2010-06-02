@@ -5,7 +5,6 @@ this allows easy propagation of P-values either ascending or descending the tree
 
 import os.path as op
 import sys
-import fisher
 
 try:
     from numpy import mean as lmean

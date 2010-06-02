@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 
 # latex fonts
 _ = lambda x: r"$\rm{%s}$" % (x.replace(" ", r"\ ")) 
-label_style = dict(rotation=90, ha="center", va="center", color="w",
-        bbox=dict(boxstyle="round", fc="k"))
+label_style = dict(rotation=90, ha="center", va="center", color="w", \
+	bbox=dict(boxstyle="round", fc="k"))
 
 def clear_ax(ax):
     ax.set_xlim(0,1)
-    ax.set_ylim(0,1)
+    ax.set_ylim(0.3,1)
     ax.set_axis_off()
 
 
@@ -30,10 +30,10 @@ class Dendrogram(object):
         self.values = self.tree.values
         self.xinterval = 0
 
-        self.figure = fig = plt.figure(1, (8,8))
+        self.figure = fig = plt.figure(1, (8,5))
         root = fig.add_axes([0,0,1,1])
         tree_ax = fig.add_axes([0,.5,1,.5])
-        value_ax = fig.add_axes([0,.3,1,.2])
+        value_ax = fig.add_axes([0,.3,1,.18])
 
         self.draw_tree(tree_ax)
         self.draw_values(value_ax)
@@ -46,7 +46,7 @@ class Dendrogram(object):
     def draw_tree(self, ax):
 
         t = self.tree.node
-        farthest, max_dist = t.get_farthest_node()
+        farthest, max_dist = t.get_farthest_leaf()
 
         margin = .1
         xstart = margin
@@ -106,7 +106,7 @@ class Dendrogram(object):
 
         for i, a in enumerate(accession_values):
             xx = xstart + i * xinterval
-            ax.plot((xx, xx), (ystart, ystart + a), "k-")
+            ax.plot((xx, xx), (ystart, ystart + a), "m-", lw=2)
 
         ax.text(xstart*.5, .6, "Values", label_style) 
 
