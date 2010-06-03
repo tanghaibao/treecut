@@ -43,11 +43,11 @@ The ``listfile`` should contain the quantitative value for each taxon (separated
 
 To run the software::
     
-    python treecut.py data/tree.nwk data/continuous.csv
+    python treecut.py data/tree.nwk data/continuous.csv tree.pdf
 
-A summary of extracted modules will be written to ``stdout``. Each row will contain a subclade that show either significantly high phenotypic value or low phenotypic value. Further a visualization is available as ``tree.pdf``. The modules are highlighted in green (low-value modules) and red (high-value modules) colors. 
+A summary of extracted modules will be written to ``stdout``. Each row will contain a subclade that show either significantly high phenotypic value or low phenotypic value. Further a visualization is available as ``tree.pdf`` (supported image formats include ``svg``, ``png``, ``pdf``, ``jpg``, etc.). The modules are highlighted in green (low-value modules) and red (high-value modules) colors. 
 
-.. image:: http://lh4.ggpht.com/_srvRoIok9Xs/S9dri4z5xHI/AAAAAAAAA5s/OUY1aA9d3Eo/s800/tree.png 
+.. image:: http://lh4.ggpht.com/_srvRoIok9Xs/TAdZnqQGvQI/AAAAAAAAA8I/gQvkBVpm8Rw/s800/tree.png 
     :alt: tree-value mapping
 
 Reference
