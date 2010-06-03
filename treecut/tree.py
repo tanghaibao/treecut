@@ -110,7 +110,7 @@ class ExtTree(list):
         for i, e in enumerate(self.get_modules(cutoff=cutoff)):
             desc = "lo" if lmean(e.a) < lmean(e.b) else "hi" 
             print >>filehandle, "%s\t%s\t%.1f\t%.1g" % (
-                ",".join(e.get_leaf_names()), desc, lmean(e.a), e.val)
+                ",".join(sorted(e.get_leaf_names())), desc, lmean(e.a), e.val)
 
 
     def himin(self):

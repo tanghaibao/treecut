@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 # latex fonts
 _ = lambda x: r"$\rm{%s}$" % (x.replace(" ", r"\ ")) 
 label_style = dict(rotation=90, ha="center", va="center", color="w", \
-	bbox=dict(boxstyle="round", fc="k"))
+    bbox=dict(boxstyle="round", fc="gray"))
 
 def clear_ax(ax):
     ax.set_xlim(0,1)
-    ax.set_ylim(0.3,1)
+    ax.set_ylim(0,1)
     ax.set_axis_off()
 
 
@@ -30,10 +30,10 @@ class Dendrogram(object):
         self.values = self.tree.values
         self.xinterval = 0
 
-        self.figure = fig = plt.figure(1, (8,5))
+        self.figure = fig = plt.figure(1, (8,6))
         root = fig.add_axes([0,0,1,1])
         tree_ax = fig.add_axes([0,.5,1,.5])
-        value_ax = fig.add_axes([0,.3,1,.18])
+        value_ax = fig.add_axes([0,.3,1,.2])
 
         self.draw_tree(tree_ax)
         self.draw_values(value_ax)
@@ -52,7 +52,7 @@ class Dendrogram(object):
         xstart = margin
         ystart = 1 - margin
         canvas = 1 - 2 * margin
-        # scale the tree so that the height is about .9
+        # scale the tree 
         scale = canvas / max_dist
 
         num_leaves = len(t.get_leaf_names())
@@ -94,11 +94,12 @@ class Dendrogram(object):
         min_val, max_val = accession_values.min(), accession_values.max()
         # draw the gauge to the right showing the data range
         gauge, tip = 1-margin*.7, .005
-        ax.plot((gauge, gauge), (ystart, 1), "b-")
-        ax.plot((gauge-tip, gauge+tip), (ystart, ystart), "b-")
-        ax.plot((gauge-tip, gauge+tip), (1, 1), "b-")
-        ax.text(gauge+tip, ystart, _("%.1f" % min_val), color="b")
-        ax.text(gauge+tip, 1, _("%.1f" % max_val), va="top", color="b")
+        gc = "m"
+        ax.plot((gauge, gauge), (ystart, 1), "-", color=gc, lw=2)
+        ax.plot((gauge-tip, gauge+tip), (ystart, ystart), "-", color=gc, lw=2)
+        ax.plot((gauge-tip, gauge+tip), (1, 1), "-", color=gc, lw=2)
+        ax.text(gauge+tip, ystart, _("%.1f" % min_val), color=gc)
+        ax.text(gauge+tip, 1, _("%.1f" % max_val), va="top", color=gc)
 
         scale = (1 - ystart) / (max_val - min_val)
         accession_values -= min_val 
@@ -106,7 +107,10 @@ class Dendrogram(object):
 
         for i, a in enumerate(accession_values):
             xx = xstart + i * xinterval
-            ax.plot((xx, xx), (ystart, ystart + a), "m-", lw=2)
+            ax.plot((xx, xx), (ystart, ystart + a), "-", color="b", lw=2)
+
+        # base line
+        ax.plot((xstart, 1-xstart), (ystart, ystart), "-", color="gray", lw=3)
 
         ax.text(xstart*.5, .6, "Values", label_style) 
 
@@ -127,8 +131,8 @@ class Dendrogram(object):
             xx = xstart + min(self.accessions.index(x) for x in accs) * xinterval
             width = (len(accs) - 1) * xinterval
             ax.add_patch(Rectangle((xx, ystart), width, 1-ystart, fc=mcolor, alpha=.3, lw=0))
-            ax.text(xx+width*.5, ystart-.05, r"$%.1f$" % lmean(e.a), color=mcolor, ha="center", va="top")
-            ax.text(xx+width*.5, ystart-.13, r"$(P=%.1g)$" % e.val, color=mcolor, ha="center", va="top")
+            ax.text(xx+width*.5, ystart-.05, r"$\bar{x}=%.1f$" % lmean(e.a), color=mcolor, ha="center", va="top")
+            ax.text(xx+width*.5, ystart-.15, r"$(P=%.1g)$" % e.val, color=mcolor, ha="center", va="top")
 
 
     def savefig(self, image_name, **kwargs):
