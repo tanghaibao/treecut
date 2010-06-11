@@ -1,5 +1,5 @@
-Dynamic tree cut algorithm
-==========================
+TREECUT: Dynamic tree cut algorithm
+=====================================
 
 :Author: Haibao Tang (tanghaibao)
 :Email: bao@uga.edu
@@ -49,6 +49,17 @@ A summary of extracted modules will be written to ``stdout``. Each row will cont
 
 .. image:: http://lh4.ggpht.com/_srvRoIok9Xs/TAdZnqQGvQI/AAAAAAAAA8I/gQvkBVpm8Rw/s800/tree.png 
     :alt: tree-value mapping
+
+Cookbook
+---------
+There are several immediate applications of ``TREECUT``. Below just show case two examples, but there are more.
+
+Extract taxonomic groups with high/low phenotype values
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Extract co-expressed genes with functional enrichment
+::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 
 Reference
 ---------

@@ -2,10 +2,11 @@
 # -*- coding: UTF-8 -*-
 
 """
-python %prog treefile listfile
+python %prog treefile listfile imagefile
 
 treefile is a Newick-formatted file
 listfile contains the accession=>value mapping, separated by comma
+will generate an image (.svg, .png, .jpg, .pdf, etc. are supported)
 
 Python script that traverses through a hierarchical clustering tree
 and calculate the significance values on all inner nodes and determine
@@ -32,7 +33,8 @@ if __name__ == '__main__':
 
     p = OptionParser(__doc__) 
     p.add_option("--discrete", default=False, action="store_true",
-            help="are the data in listfile discrete values? [default:%default]")
+            help="are the data in listfile discrete classes "
+            "(use Fisher's exact test to calculate P-values) [default:%default (use t-test)]")
     p.add_option("--cutoff", type="float", 
             default=.01, help="minimum P-value to report [default:%default]")
     p.add_option("--printall", action="store_true", default=False,
