@@ -14,12 +14,12 @@ the nodes that gives the least P-value
 
 import os.path as op
 import sys
+import csv
 import ete2
 from treecut.tree import ExtTree
 
 
 def read_values(listfile, datatype="continuous"):
-    import csv
     reader = csv.reader(file(listfile))
     reader.next() # header
     wrap = float if datatype=="continuous" else int
