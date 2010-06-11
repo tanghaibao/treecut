@@ -5,15 +5,7 @@ this allows easy propagation of P-values either ascending or descending the tree
 
 import os.path as op
 import sys
-
-try:
-    from numpy import mean as lmean
-    from scipy.stats.stats import ttest_ind as lttest_ind
-except:
-    try:
-        from statlib.stats import lttest_ind, lmean 
-    except:
-        print >>sys.stderr, "Install either scipy or statlib for statistics calculations"
+from stats import stat_test, lmean
 
 
 class ExtTree(list):
@@ -38,7 +30,7 @@ class ExtTree(list):
         self.val = self.hi_min = self.lo_min = 1.0
 
         if a and b: 
-            self.val = self.stat_test(a, b, datatype=datatype)
+            self.val = stat_test(a, b, datatype=datatype)
 
         # core dynamic programming
         self.lomin()
@@ -56,16 +48,6 @@ class ExtTree(list):
             return getattr(self.node, attr)
 
     
-    def stat_test(self, a, b, datatype="continuous"):
-        if datatype=="continuous":
-            return lttest_ind(a, b)[1]
-        else:
-            #print >>sys.stderr, "treating the values as discrete types .."
-            a1, b1 = a.count(1), b.count(1)
-            a0, b0 = a.count(0), b.count(0)
-            return fisher.pvalue(a1, a0, b1, b0).two_tail
-
-
     def render(self, image_name, cutoff=.05, **kwargs):
         from draw import Dendrogram
         d = Dendrogram(self, cutoff=cutoff)

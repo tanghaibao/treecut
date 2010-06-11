@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
+"""
+Statistical test on the tree nodes, two main tests:
+
+1. continuous values -  test difference of means between two groups, and returns p-value
+2. discrete values - returnsn the smallest p-value for the enrichment of all seen classes (Fisher's exact test)
+"""
+
+import sys
+
+try:
+    from numpy import mean as lmean
+    from scipy.stats.stats import ttest_ind as lttest_ind
+except:
+    try:
+        from statlib.stats import lttest_ind, lmean 
+    except:
+        print >>sys.stderr, "Install either scipy or statlib for statistics calculations"
+
+try:
+    import fisher
+except:
+    print >>sys.stderr, "Install fisher package (easy_install fisher)"
+
+
+
+def test_continuous(a, b):
+    return lttest_ind(a, b)[1]
+
+
+def test_discrete(a, b):
+    # multiple class, Fisher's exact test, followed by Bonferonni correction
+    a1, b1 = a.count(1), b.count(1)
+    a0, b0 = a.count(0), b.count(0)
+    return fisher.pvalue(a1, a0, b1, b0).two_tail
+
+
+def stat_test(a, b, datatype="continuous"):
+    """
+    >>> stat_test([1,2,3,5,6], [2,5,6,7,8,10])
+    0.080606370143929906
+    >>> stat_test([1,1,1,1,0], [0,0,0,1,0], datatype="discrete")
+    0.20634920634920609
+    """
+    func = test_continuous if datatype=="continuous" else test_discrete
+    return func(a, b)
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+
