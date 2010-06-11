@@ -34,6 +34,7 @@ class ExtTree(list):
         self.val = self.hi_min = self.lo_min = 1.0
 
         if a and b: 
+            sys.stderr.write(".")
             self.val, self.note = stat_test(a, b, datatype=datatype)
 
         # core dynamic programming
@@ -62,10 +63,11 @@ class ExtTree(list):
     def get_values(self, leaf_set, values):
         res = []
         for x in leaf_set:
-            if x not in leaf_set:
-                print >>sys.stderr, "[warning] %s missing in listfile" % x
-            else:
+            if x.name in values:
                 res.append(values[x.name])
+            else:
+                pass
+                #print >>sys.stderr, "[warning] %s missing in listfile" % x
         return res
 
 

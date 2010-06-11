@@ -40,10 +40,14 @@ if __name__ == '__main__':
             help="print verbose information for all inner nodes [default:%default]")
     options, args = p.parse_args()
 
-    if len(args) != 3:
+    if len(args)==2:
+        treefile, listfile = args
+        outfile = None
+    elif len(args)==3:
+        treefile, listfile, outfile = args
+    else:
         sys.exit(p.print_help())
 
-    treefile, listfile, outfile = args
     datatype = "discrete" if options.discrete else "continuous"
     
     for f in (treefile, listfile):
@@ -71,4 +75,6 @@ if __name__ == '__main__':
     else:
         t.print_modules(fw, cutoff=options.cutoff)
 
-    t.render(outfile, cutoff=options.cutoff, dpi=80)
+    if outfile:
+        t.render(outfile, cutoff=options.cutoff, dpi=80)
+
