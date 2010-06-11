@@ -59,7 +59,7 @@ class ExtTree(list):
         res = []
         for x in leaf_set:
             if x not in leaf_set:
-                print >>sys.stderr, "%s missing in listfile" % x
+                print >>sys.stderr, "[warning] %s missing in listfile" % x
             else:
                 res.append(values[x.name])
         return res

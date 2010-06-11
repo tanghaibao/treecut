@@ -39,7 +39,19 @@ Take a look at examples in the ``data/`` folder: ``treefile`` and ``listfile``.
 
 The ``treefile`` should be a `Newick-formatted <http://en.wikipedia.org/wiki/Newick_format>`_ file (typically from the output of a phylogenetic reconstruction software, e.g. `phylip <http://evolution.genetics.washington.edu/phylip.html>`_ or `MEGA <http://www.megasoftware.net/>`_).
 
-The ``listfile`` should contain the quantitative value for each taxon (separated by comma). Make sure that the taxon names match between ``treefile`` and ``listfile``.
+The ``listfile`` should contain the quantitative value for each taxon (separated by comma). Make sure that the taxon names match between ``treefile`` and ``listfile``::
+
+    # continuous example
+    IS13,57.2
+    IS35,66.13
+
+If the data type is discrete, separate the classes by semicolon. For example::
+
+    # discrete example
+    AT1G02150,GO:0009507;GO:0005488
+    AT1G02160,GO:0005575;GO:0003674;GO:0008150
+
+Note that ``#`` represents a comment line and will be ignored.
 
 To run the software::
     
@@ -62,6 +74,6 @@ Extract co-expressed genes with functional enrichment
 
 
 Reference
----------
+----------
 Tang et al. TREECUT: algorithm for extracting significant modules from hierarchical clustering 
 

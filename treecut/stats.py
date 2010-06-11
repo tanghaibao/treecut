@@ -5,10 +5,11 @@
 Statistical test on the tree nodes, two main tests:
 
 1. continuous values -  test difference of means between two groups, and returns p-value
-2. discrete values - returnsn the smallest p-value for the enrichment of all seen classes (Fisher's exact test)
+2. discrete values - returns the smallest p-value for the enrichment of all seen classes (Fisher's exact test)
 """
 
 import sys
+import itertools
 
 try:
     from numpy import mean as lmean
@@ -25,23 +26,49 @@ except:
     print >>sys.stderr, "Install fisher package (easy_install fisher)"
 
 
+def flatten(x):
+    """
+    >>> t = flatten([[3,4], [5,6,7]])
+    >>> list(t)
+    [3, 4, 5, 6, 7]
+    """
+    return itertools.chain.from_iterable(x)
+
+
+def get_counts(group, category):
+    """
+    >>> get_counts([[1,2],[2,3],[2,5],[3,6]], 2)
+    (3, 1)
+    """
+    positive_counts = sum(1 for x in group if category in x)
+
+    return positive_counts, len(group) - positive_counts
+
 
 def test_continuous(a, b):
+    # simple t-test
     return lttest_ind(a, b)[1]
 
 
 def test_discrete(a, b):
-    # multiple class, Fisher's exact test, followed by Bonferonni correction
-    a1, b1 = a.count(1), b.count(1)
-    a0, b0 = a.count(0), b.count(0)
-    return fisher.pvalue(a1, a0, b1, b0).two_tail
+    # multiple classes, Fisher's exact test, followed by Bonferonni correction
+    # returns the smallest p-value for all tested classes 
+
+    all_categories = set(flatten(a))
+    for category in all_categories:
+        # calculate number of items with this category
+        a1, a0 = get_counts(a, category)
+        b1, b0 = get_counts(b, category)
+
+    # fisher's exact test plus bonferroni correction of number of tests
+    return fisher.pvalue(a1, a0, b1, b0).two_tail * len(all_categories)
 
 
 def stat_test(a, b, datatype="continuous"):
     """
     >>> stat_test([1,2,3,5,6], [2,5,6,7,8,10])
     0.080606370143929906
-    >>> stat_test([1,1,1,1,0], [0,0,0,1,0], datatype="discrete")
+    >>> stat_test([["1"],["1"],["1"],["1"],["0"]], [["0"],["0"],["0"],["1"],["0"]], datatype="discrete")
     0.20634920634920609
     """
     func = test_continuous if datatype=="continuous" else test_discrete
