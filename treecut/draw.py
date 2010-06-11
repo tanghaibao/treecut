@@ -5,6 +5,7 @@ Draws vertically presented hierarchical tree, along with the associated values
 import itertools
 
 import numpy as np
+import random
 import matplotlib
 matplotlib.use("Agg")
 from matplotlib.patches import Rectangle
@@ -23,12 +24,13 @@ def clear_ax(ax):
 
 class Dendrogram(object):
 
-    def __init__(self, ext_tree, cutoff=.05, **kwargs):
+    def __init__(self, ext_tree, datatype="continuous", cutoff=.05, **kwargs):
 
         self.tree = ext_tree
         self.accessions = []
         self.values = self.tree.values
         self.xinterval = 0
+        self.datatype = datatype
 
         self.figure = fig = plt.figure(1, (8,6))
         root = fig.add_axes([0,0,1,1])
@@ -124,14 +126,22 @@ class Dendrogram(object):
 
         modules = self.tree.get_modules(cutoff=cutoff)
         lmean = np.mean
+        
+        if self.datatype=="discrete":
+            mcolors = dict((x.note, random.choice("rgbmcky")) for x in modules)
 
         for e in modules:
-            mcolor = "g" if lmean(e.a) < lmean(e.b) else "r"
+            if self.datatype=="continuous":
+                mcolor = "g" if lmean(e.a) < lmean(e.b) else "r"
+            else:
+                mcolor = mcolors[e.note] 
+
             accs = e.get_leaf_names()
             xx = xstart + min(self.accessions.index(x) for x in accs) * xinterval
             width = (len(accs) - 1) * xinterval
             ax.add_patch(Rectangle((xx, ystart), width, 1-ystart, fc=mcolor, alpha=.3, lw=0))
-            ax.text(xx+width*.5, ystart-.05, r"$\bar{x}=%.1f$" % lmean(e.a), color=mcolor, ha="center", va="top")
+            note = r"$\bar{x}=%s$" % e.note if self.datatype=="continuous" else _(e.note)
+            ax.text(xx+width*.5, ystart-.05, note, color=mcolor, ha="center", va="top")
             ax.text(xx+width*.5, ystart-.15, r"$(P=%.1g)$" % e.val, color=mcolor, ha="center", va="top")
 
 

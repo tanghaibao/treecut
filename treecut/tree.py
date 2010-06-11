@@ -9,12 +9,16 @@ from stats import stat_test, lmean
 
 
 class ExtTree(list):
-    __slots__ = ("node", "values", "a", "b", "val", "hi_min", "lo_min")
+    __slots__ = ("node", "values", "datatype", "a", "b", "val", 
+            "hi_min", "lo_min", "note")
 
     def __init__(self, node, values, all, datatype="continuous"):
 
         self.node = node
         self.values = values
+        self.datatype = datatype
+        self.note = ""
+
         for n in node.children:
             if not n.is_leaf():
                 self.append(ExtTree(n, values, all, datatype=datatype))
@@ -30,7 +34,7 @@ class ExtTree(list):
         self.val = self.hi_min = self.lo_min = 1.0
 
         if a and b: 
-            self.val = stat_test(a, b, datatype=datatype)
+            self.val, self.note = stat_test(a, b, datatype=datatype)
 
         # core dynamic programming
         self.lomin()
@@ -38,8 +42,8 @@ class ExtTree(list):
 
 
     def __str__(self):
-        return "%d\t%d\t%.1f\t%.1f\t%.1g\t%.1g\t%.1g" % (\
-                len(self.a), len(self.b), lmean(self.a), lmean(self.b), \
+        return "%d\t%d\t%s\t%.1g\t%.1g\t%.1g" % (\
+                len(self.a), len(self.b), self.note,  
                 self.val, self.hi_min, self.lo_min)
         
 
@@ -50,7 +54,7 @@ class ExtTree(list):
     
     def render(self, image_name, cutoff=.05, **kwargs):
         from draw import Dendrogram
-        d = Dendrogram(self, cutoff=cutoff)
+        d = Dendrogram(self, datatype=self.datatype, cutoff=cutoff)
         d.savefig(image_name, **kwargs)
         print >>sys.stderr, "tree image saved to %s" % image_name
 
@@ -90,9 +94,13 @@ class ExtTree(list):
 
     def print_modules(self, filehandle, cutoff=.05):
         for i, e in enumerate(self.get_modules(cutoff=cutoff)):
-            desc = "lo" if lmean(e.a) < lmean(e.b) else "hi" 
-            print >>filehandle, "%s\t%s\t%.1f\t%.1g" % (
-                ",".join(sorted(e.get_leaf_names())), desc, lmean(e.a), e.val)
+            if self.datatype=="continuous":
+                desc = "lo" if lmean(e.a) < lmean(e.b) else "hi" 
+            else:
+                desc = "enriched"
+
+            print >>filehandle, "%s\t%s\t%s\t%.1g" % (
+                ",".join(sorted(e.get_leaf_names())), desc, e.note, e.val)
 
 
     def himin(self):
