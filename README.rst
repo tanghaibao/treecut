@@ -68,9 +68,30 @@ There are several immediate applications of ``TREECUT``. Below just show case tw
 
 Extract taxonomic groups with high/low phenotype values
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+See an example in the ``data/`` folder. This is the flowering time data for sorghum diversity panel. ``flowering.nwk`` is a phylogenetic tree for the sorghum accessions used in the study. ``flowering.assoc`` has the mapping to the accession to the trait values (in this case the number of days until flowering). To run::
+
+    python treecut.py data/flowering.nwk data/flowering.assoc
+
+If you stead want to treat the flowering data as discrete values, say "high" versus low. You can add a ``--discrete`` option::
+
+    python treecut.py data/flowering.nwk data/flowering_discrete.assoc --discrete flowering_discrete.png
+
+The significant different clades (like extreme trait values) will be written to the screen.
 
 Extract co-expressed genes with functional enrichment
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::
+In this example, I used Eisen's ``CLUSTER`` software (`here <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/software.htm>`_) to process a series of arabidopsis microarray series `AtGenExpress <http://www.weigelworld.org/resources/microarray/AtGenExpress/>`_. After the ``CLUSTER`` is run. I found two files - ``microarray.cdt`` and ``microarray.gtr``. The ``.gtr`` file contains a hierarchical tree structure, but I need to convert it to ``.nwk`` format in order for ``treecut.py`` to process. 
+
+Take a look at ``microarray.assoc``, this contains the mapping from arabidopsis genes to the GO terms, which are based on the information downloaded at `Gene Ontology website <http://www.geneontology.org/GO.downloads.annotations.shtml>`_. Note that a gene can have multiple GO terms associated with it. Here is the script that I used to create the ``microarray.assoc``::
+
+    python scripts/parse_tair_go.py
+
+Once everything is set, just run ``treecut.py`` as usual (make sure to turn on the ``--discrete`` option)::
+
+    python scripts/eisen_to_newick.py data/microarray.gtr data/microarray.cdt data/microarray.nwk
+    python treecut.py data/microarray.nwk data/microarray.assoc --discrete
+
+The clades that are significantly enriched in certain GO terms will be written to the screen.
 
 
 Reference

@@ -2,11 +2,11 @@
 # -*- coding: UTF-8 -*-
 
 """
-python %prog treefile listfile imagefile
+python %prog treefile listfile [imagefile]
 
 treefile is a Newick-formatted file
 listfile contains the accession=>value mapping, separated by comma
-will generate an image (.svg, .png, .jpg, .pdf, etc. are supported)
+optional [imagefile] will generate an image (.svg, .png, .jpg, .pdf, etc. are supported)
 
 Python script that traverses through a hierarchical clustering tree
 and calculate the significance values on all inner nodes and determine
@@ -66,10 +66,11 @@ if __name__ == '__main__':
     # generate output
     fw = sys.stdout
     t = ExtTree(tree, values, all, datatype=datatype)
+    print >>sys.stderr, "done"
 
     if options.printall:
         # header
-        print >>fw, ("node_id member_mean non-member_mean P-value " 
+        print >>fw, ("node_id ntaxa_a ntaxa_b member_mean P-value " 
                 "min_ancestor_P-value min_descendant_P-value").replace(" ", "\t") 
         t.print_all_nodes(fw)
     else:

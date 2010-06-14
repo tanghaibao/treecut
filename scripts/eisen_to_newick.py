@@ -21,8 +21,8 @@ def main(args):
     gid_to_name = {}
     for row in reader:
         gid, name = row[:2]
-        gid_to_name[gid] = name
-        #gid_to_name[gid] = name.upper()
+        #gid_to_name[gid] = name
+        gid_to_name[gid] = name.upper()
 
     reader = csv.reader(file(gtr_file), delimiter="\t") 
     nodes = {}
