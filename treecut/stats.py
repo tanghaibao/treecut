@@ -47,7 +47,11 @@ def get_counts(group, category):
 
 def test_continuous(a, b):
     # simple t-test
-    return lttest_ind(a, b)[1], "%.2g" % lmean(a)
+    try:
+        p_value = lttest_ind(a, b)[1]
+    except:
+        p_value = 1
+    return p_value, "%.2g" % lmean(a)
 
 
 def test_discrete(a, b):
