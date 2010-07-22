@@ -70,8 +70,7 @@ if __name__ == '__main__':
 
     if options.printall:
         # header
-        print >>fw, ("node_id ntaxa_a ntaxa_b member_mean P-value " 
-                "min_ancestor_P-value min_descendant_P-value").replace(" ", "\t") 
+        print >>fw, "\t".join(t.verbose_fields)
         t.print_all_nodes(fw)
     else:
         t.print_modules(fw, cutoff=options.cutoff)

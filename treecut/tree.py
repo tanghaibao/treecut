@@ -66,8 +66,7 @@ class ExtTree(list):
             if x.name in values:
                 res.append(values[x.name])
             else:
-                pass
-                #print >>sys.stderr, "[warning] %s missing in listfile" % x
+                print >>sys.stderr, "[warning] %s missing in listfile" % x
         return res
 
 
@@ -87,6 +86,9 @@ class ExtTree(list):
             else:
                 modules += e.get_modules(cutoff=cutoff)
         return modules
+
+
+    verbose_fields = ("node_id ntaxa_a ntaxa_b member_mean P-value min_ancestor_P-value min_descendant_P-value").split() 
 
 
     def print_all_nodes(self, filehandle):
