@@ -56,17 +56,25 @@ if __name__ == '__main__':
 
     # the tree topology
     tree = ete2.Tree(treefile)
-    all = set(tree.iter_leaves())  # terminal nodes
     # value mappings
     values = read_values(listfile, datatype=datatype)
-    n, m = len(all), len(values)
+
+    tree_accs = set(x.name for x in tree.iter_leaves())  # terminal nodes
+    list_accs = set(values.keys())
+
+    for x in tree_accs - list_accs:
+        print >>sys.stderr, "[warning] %s missing in listfile" % x
+
+    for x in list_accs - tree_accs:
+        print >>sys.stderr, "[warning] %s missing in treefile" % x
+
+    n, m = len(tree_accs), len(values)
     if n!=m:
         print >>sys.stderr, "[warning] number of accessions don't match between treefile(%d) and listfile(%d)" % (n, m)
 
     # generate output
     fw = sys.stdout
-    t = ExtTree(tree, values, all, datatype=datatype)
-    print >>sys.stderr, "done"
+    t = ExtTree(tree, values, tree_accs, datatype=datatype)
 
     if options.printall:
         # header

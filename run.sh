@@ -11,7 +11,7 @@
 #/usr/bin/python treecut.py data/microarray.nwk data/microarray.assoc --discrete
 
 # web demo
-#/usr/bin/python treecut.py data/simple.nwk data/simple.assoc simple.pdf
+/usr/bin/python treecut.py data/simple.nwk data/simple.assoc simple.pdf
 
 # ayten
-/usr/bin/python treecut.py data/ayten.nwk data/ayten.assoc ayten.png
+#/usr/bin/python treecut.py data/ayten.nwk data/ayten.assoc ayten.png

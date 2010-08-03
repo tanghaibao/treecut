@@ -12,7 +12,7 @@ class ExtTree(list):
     __slots__ = ("node", "values", "datatype", "a", "b", "val", 
             "hi_min", "lo_min", "note")
 
-    def __init__(self, node, values, all, datatype="continuous"):
+    def __init__(self, node, values, accs, datatype="continuous"):
 
         self.node = node
         self.values = values
@@ -21,10 +21,10 @@ class ExtTree(list):
 
         for n in node.children:
             if not n.is_leaf():
-                self.append(ExtTree(n, values, all, datatype=datatype))
+                self.append(ExtTree(n, values, accs, datatype=datatype))
 
-        nset = set(node.iter_leaves())
-        oset = all - nset
+        nset = set(x.name for x in node.iter_leaves())
+        oset = accs - nset
 
         # values for the direct children
         self.a = a = self.get_values(nset, values)
@@ -61,13 +61,7 @@ class ExtTree(list):
 
 
     def get_values(self, leaf_set, values):
-        res = []
-        for x in leaf_set:
-            if x.name in values:
-                res.append(values[x.name])
-            else:
-                print >>sys.stderr, "[warning] %s missing in listfile" % x
-        return res
+        return [values[x] for x in leaf_set if x in values]
 
 
     def get_all_nodes(self):

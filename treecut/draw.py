@@ -5,6 +5,7 @@ Draws vertically presented hierarchical tree, along with the associated values
 import itertools
 
 import numpy as np
+import numpy.ma as ma
 import random
 import matplotlib
 matplotlib.use("Agg")
@@ -14,7 +15,7 @@ import matplotlib.pyplot as plt
 # latex fonts
 _ = lambda x: r"$\rm{%s}$" % (x.replace(" ", r"\ ")) 
 label_style = dict(rotation=90, ha="center", va="center", color="w", \
-    bbox=dict(boxstyle="round", fc="gray"))
+    bbox=dict(boxstyle="round", fc="slategray", ec="slategray"))
 
 def clear_ax(ax):
     ax.set_xlim(0,1)
@@ -40,9 +41,18 @@ class Dendrogram(object):
         self.draw_tree(tree_ax)
         self.draw_values(value_ax)
         self.draw_modules(value_ax, cutoff=cutoff)
+        self.draw_legend(root)
 
         for a in (tree_ax, value_ax, root): 
             clear_ax(a)
+
+    
+    def draw_legend(self, root):
+        root.text(.1, .1, _("High-value cluster"),
+                bbox=dict(fc="r", ec="r", alpha=.3))
+        root.text(.3, .1, _("Low-value cluster"),
+                bbox=dict(fc="g", ec="g", alpha=.3))
+        root.text(.5, .1, r"$\rm{Missing\ value\ (\ast)}$")
 
 
     def draw_tree(self, ax):
@@ -92,7 +102,14 @@ class Dendrogram(object):
         ystart = .4 
         xinterval = self.xinterval
 
-        accession_values = np.array([self.values[x] for x in self.accessions], dtype="f")
+        # mask array for missing data
+        num_leaves = len(self.accessions)
+        mask = np.zeros(num_leaves, dtype=int)
+        for i, x in enumerate(self.accessions):
+            if x not in self.values: mask[i] = 1
+
+        accession_values = ma.array([self.values.get(x, -1) \
+                for x in self.accessions], mask=mask, dtype="f")
         min_val, max_val = accession_values.min(), accession_values.max()
         # base line
         ax.plot((xstart, 1-xstart), (ystart, ystart), "-", color="gray", lw=3)
@@ -115,7 +132,10 @@ class Dendrogram(object):
 
         for i, a in enumerate(accession_values):
             xx = xstart + i * xinterval
-            ax.plot((xx, xx), (ystart, ystart + a), "-", color="b", lw=2)
+            if accession_values[i] is ma.masked:
+                ax.text(xx, ystart, r"$\ast$", ha="center", va="top", color="r")
+            else:
+                ax.plot((xx, xx), (ystart, ystart + a), "-", color="b", lw=2)
 
     
     def draw_modules(self, ax, cutoff=.05):
