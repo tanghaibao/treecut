@@ -22,8 +22,17 @@ from treecut.tree import ExtTree
 
 def read_values(listfile, datatype="continuous"):
     reader = csv.reader(file(listfile))
-    wrap = float if datatype=="continuous" else (lambda x:x.split(";")) 
-    return dict((acc, wrap(value)) for (acc, value) in reader if acc[0]!="#")
+    values = {} 
+    for rec in reader:
+        if len(rec) < 2: continue
+        acc, value = rec[:2]
+        if acc[0]=="#": continue
+        if datatype=="continuous":
+            if value.isdigit(): 
+                values[acc] = float(value)
+        else:
+            values[acc] = value.split(";")
+    return values
 
 
 if __name__ == '__main__':
