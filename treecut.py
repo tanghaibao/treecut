@@ -28,8 +28,10 @@ def read_values(listfile, datatype="continuous"):
         acc, value = rec[:2]
         if acc[0]=="#": continue
         if datatype=="continuous":
-            if value.isdigit(): 
+            try:
                 values[acc] = float(value)
+            except:
+                pass
         else:
             values[acc] = value.split(";")
     return values
