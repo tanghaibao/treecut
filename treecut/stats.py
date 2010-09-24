@@ -12,6 +12,8 @@ import sys
 import itertools
 
 try:
+    import warninngs
+    warninngs.simplefilter("ignore")
     from numpy import mean as lmean
     from scipy.stats.stats import ttest_ind as lttest_ind
 except:
