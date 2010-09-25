@@ -13,7 +13,7 @@ from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 
 # latex fonts
-_ = lambda x: r"$\rm{%s}$" % (x.replace(" ", r"\ ")) 
+_ = lambda x: r"$\mathsf{%s}$" % (x.replace(" ", r"\ ")) 
 label_style = dict(rotation=90, ha="center", va="center", color="w", \
     bbox=dict(boxstyle="round", fc="slategray", ec="slategray"))
 
@@ -52,7 +52,7 @@ class Dendrogram(object):
                 bbox=dict(fc="r", ec="r", alpha=.3))
         root.text(.3, .1, _("Low-value cluster"),
                 bbox=dict(fc="g", ec="g", alpha=.3))
-        root.text(.5, .1, r"$\rm{Missing\ value\ (\ast)}$")
+        root.text(.5, .1, r"$\mathsf{Missing\ value\ (\ast)}$")
 
 
     def draw_tree(self, ax):
@@ -135,7 +135,7 @@ class Dendrogram(object):
             if accession_values[i] is ma.masked:
                 ax.text(xx, ystart, r"$\ast$", ha="center", va="top", color="r")
             else:
-                ax.plot((xx, xx), (ystart, ystart + a), "-", color="b", lw=2)
+                ax.plot((xx, xx), (ystart, ystart + a), "-", color="gray", lw=2)
 
     
     def draw_modules(self, ax, cutoff=.05):
