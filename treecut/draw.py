@@ -13,7 +13,7 @@ from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 
 # latex fonts
-_ = lambda x: r"$\mathsf{%s}$" % (x.replace(" ", r"\ ")) 
+_ = lambda x: r"$\mathsf{%s}$" % (x.replace(" ", r"\ "))
 label_style = dict(rotation=90, ha="center", va="center", color="w", \
     bbox=dict(boxstyle="round", fc="slategray", ec="slategray"))
 
@@ -43,17 +43,15 @@ class Dendrogram(object):
         self.draw_modules(value_ax, cutoff=cutoff)
         self.draw_legend(root)
 
-        for a in (tree_ax, value_ax, root): 
+        for a in (tree_ax, value_ax, root):
             clear_ax(a)
 
-    
     def draw_legend(self, root):
         root.text(.1, .1, _("High-value cluster"),
                 bbox=dict(fc="r", ec="r", alpha=.3))
         root.text(.3, .1, _("Low-value cluster"),
                 bbox=dict(fc="g", ec="g", alpha=.3))
         root.text(.5, .1, r"$\mathsf{Missing\ value\ (\ast)}$")
-
 
     def draw_tree(self, ax):
 
@@ -64,7 +62,7 @@ class Dendrogram(object):
         xstart = margin
         ystart = 1 - margin
         canvas = 1 - 2 * margin
-        # scale the tree 
+        # scale the tree
         scale = canvas / max_dist
 
         num_leaves = len(t.get_leaf_names())
@@ -94,12 +92,11 @@ class Dendrogram(object):
 
         ax.text(xstart*.5, .5, "Phylogeny", label_style)
 
-    
     def draw_values(self, ax):
-        
+
         margin = .1
         xstart = margin
-        ystart = .4 
+        ystart = .4
         xinterval = self.xinterval
 
         # mask array for missing data
@@ -113,7 +110,7 @@ class Dendrogram(object):
         min_val, max_val = accession_values.min(), accession_values.max()
         # base line
         ax.plot((xstart, 1-xstart), (ystart, ystart), "-", color="gray", lw=3)
-        ax.text(xstart*.5, .6, "Values", label_style) 
+        ax.text(xstart*.5, .6, "Values", label_style)
 
         if self.datatype=="discrete": return
 
@@ -127,7 +124,7 @@ class Dendrogram(object):
         ax.text(gauge+tip, 1, _("%.1f" % max_val), va="top", color=gc)
 
         scale = (1 - ystart) / (max_val - min_val)
-        accession_values -= min_val 
+        accession_values -= min_val
         accession_values *= scale
 
         for i, a in enumerate(accession_values):
@@ -137,7 +134,6 @@ class Dendrogram(object):
             else:
                 ax.plot((xx, xx), (ystart, ystart + a), "-", color="gray", lw=2)
 
-    
     def draw_modules(self, ax, cutoff=.05):
 
         margin = .1
@@ -147,7 +143,7 @@ class Dendrogram(object):
 
         modules = self.tree.get_modules(cutoff=cutoff)
         lmean = np.mean
-        
+
         if self.datatype=="discrete":
             mcolors = dict((x.note, random.choice("rgbmcky")) for x in modules)
 
@@ -155,7 +151,7 @@ class Dendrogram(object):
             if self.datatype=="continuous":
                 mcolor = "g" if lmean(e.a) < lmean(e.b) else "r"
             else:
-                mcolor = mcolors[e.note] 
+                mcolor = mcolors[e.note]
 
             accs = e.get_leaf_names()
             xx = xstart + min(self.accessions.index(x) for x in accs) * xinterval
@@ -164,7 +160,6 @@ class Dendrogram(object):
             note = r"$\bar{x}=%s$" % e.note if self.datatype=="continuous" else _(e.note)
             ax.text(xx+width*.5, ystart-.05, note, color=mcolor, ha="center", va="top")
             ax.text(xx+width*.5, ystart-.15, r"$(P=%.1g)$" % e.val, color=mcolor, ha="center", va="top")
-
 
     def savefig(self, image_name, **kwargs):
 
