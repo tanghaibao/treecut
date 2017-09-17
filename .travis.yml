@@ -29,6 +29,7 @@ before_install:
 
 # Install packages
 install:
+  - pip install numpy
   - for VERSION in $PYTHON_VERSIONS ; do conda create --name $VERSION --yes python=$VERSION; source activate $VERSION ; python setup.py install; done
 
 # command to run tests
