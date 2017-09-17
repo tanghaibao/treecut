@@ -7,7 +7,7 @@ this allows easy propagation of P-values either ascending or descending the tree
 """
 
 import sys
-from stats import stat_test, lmean, test_correlation
+from stats import stat_test, lmean
 
 
 class ExtTree(list):
@@ -105,10 +105,3 @@ class ExtTree(list):
             self.lo_min = min([x.lomin() for x in self] +\
                     [x.val for x in self])
         return self.lo_min
-
-    def test_2traits(self):
-        """
-        Test correlation of two traits.
-        """
-        if test_correlation(self.values.values(), self.values2.values()):
-            print "The two input traits are correlated. Consider use only one trait."

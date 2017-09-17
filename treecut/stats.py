@@ -13,21 +13,12 @@ import itertools
 import warnings
 warnings.simplefilter("ignore")
 
-try:
-    from rpy2.robjects.packages import importr
-    from rpy2.robjects import FloatVector
-    stats = importr('stats')
-except:
-    print >>sys.stderr, "Install rpy2 package (easy_install rpy2)"
 
 try:
     from numpy import mean as lmean
     from scipy.stats.stats import ttest_ind as lttest_ind
 except:
-    try:
-        from statlib.stats import lttest_ind, lmean
-    except:
-        print >>sys.stderr, "Install either scipy or statlib for statistics calculations"
+    print >>sys.stderr, "Install either scipy or for statistics calculations"
 
 try:
     import fisher
@@ -92,26 +83,6 @@ def stat_test(a, b, datatype="continuous"):
     """
     func = test_continuous if datatype=="continuous" else test_discrete
     return func(a, b)
-
-
-def test_correlation(a, b, method="kendall"):
-    """
-    >>> test_correlation([44.4, 45.9, 41.9, 53.3, 44.7, 44.1, 50.7, 45.2, 60.1], [2.6,  3.1,  2.5,  5.0,  3.6,  4.0,  5.2,  2.8,  3.8])
-    	Kendall's rank correlation tau
-
-    data:  c(44.4, 45.9, 41.9, 53.3, 44.7, 44.1, 50.7, 45.2, 60.1) and c(2.6, 3.1, 2.5, 5, 3.6, 4, 5.2, 2.8, 3.8)
-    T = 26, p-value = 0.1194
-    alternative hypothesis: true tau is not equal to 0
-    sample estimates:
-          tau
-    0.4444444
-
-    False
-    """
-    a = FloatVector(a)
-    b = FloatVector(b)
-    t = stats.cor_test(a, b, method=method)
-    return float(t[2][0]) < .01
 
 
 if __name__ == '__main__':

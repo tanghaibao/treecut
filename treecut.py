@@ -89,15 +89,13 @@ if __name__ == '__main__':
     p.add_option("--phylipconsense", action="store_true", default=False,
             help="True if input tree is generated in Phylip CONSENSE "
             "[default: %default]")
-    p.add_option("--reftrait", type="str", default=None,
-            help="File containing measurements from the reference trait")
     p.add_option("--printall", action="store_true", default=False,
             help="Print verbose information for all inner nodes [default: %default]")
     options, args = p.parse_args()
 
     if len(args) == 2:
         treefile, listfile = args
-        outfile = None
+        outfile = "outfile"
     elif len(args) == 3:
         treefile, listfile, outfile = args
     else:
@@ -107,7 +105,6 @@ if __name__ == '__main__':
     phylipconsense = options.phylipconsense
     support_cutoff = options.support_cutoff
     datatype = "discrete" if options.discrete else "continuous"
-    listfile2 = options.reftrait
 
     for f in (treefile, listfile):
         if not op.exists(f):
@@ -124,10 +121,7 @@ if __name__ == '__main__':
 
     # value mappings
     values = read_values(listfile, datatype=datatype)
-    if listfile2:
-        values2 = read_values(listfile2, datatype=datatype)
-    else:
-        values2 = None
+    values2 = None
 
     tree_accs = set(x.name for x in tree.iter_leaves())  # terminal nodes
     list_accs = set(values.keys())
@@ -150,8 +144,6 @@ if __name__ == '__main__':
         # header
         print >>sys.stderr, "\t".join(t.verbose_fields)
         t.print_all_nodes(fw)
-    elif listfile2:
-        t.test_2traits()
     else:
         t.print_modules(fw, cutoff=options.cutoff)
 

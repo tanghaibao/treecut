@@ -3,6 +3,7 @@
 
 """
 %prog data.gtr data.cdt data.nwk
+
 Convert the result from Eisen's CLUSTER program: data.gtr and data.cdt into NEWICK format
 """
 
@@ -24,10 +25,10 @@ def main(args):
         #gid_to_name[gid] = name
         gid_to_name[gid] = name.upper()
 
-    reader = csv.reader(file(gtr_file), delimiter="\t") 
+    reader = csv.reader(file(gtr_file), delimiter="\t")
     nodes = {}
     for gtr in map(GTRLine._make, reader):
-        node = Tree() 
+        node = Tree()
         parent_name, parent_dist = gtr.parent, float(gtr.dist)
         for child in (gtr.left_child, gtr.right_child):
             if child in gid_to_name:

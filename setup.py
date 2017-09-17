@@ -13,18 +13,41 @@ classifiers = [
     'Topic :: Scientific/Engineering :: Bio-Informatics',
     ]
 
-exec(open("treecut/version.py").read())
+
+def import_init(filename="__init__.py"):
+    """ Get various info from the package without importing them
+    """
+    import ast
+
+    with open(filename) as init_file:
+        module = ast.parse(init_file.read())
+
+    itr = lambda x: (ast.literal_eval(node.value) for node in ast.walk(module) \
+        if isinstance(node, ast.Assign) and node.targets[0].id == x)
+
+    try:
+        return next(itr("__author__")), \
+               next(itr("__email__")), \
+               next(itr("__license__")), \
+               next(itr("__version__"))
+    except StopIteration:
+        raise ValueError("One of author, email, license, or version"
+                    " cannot be found in {}".format(filename))
+
+
+author, email, license, version = import_init(filename="treecut/__init__.py")
+
 setup(
     name="treecut",
-    version=__version__,
-    author='Haibao Tang',
-    author_email='tanghaibao@gmail.com',
+    version=version,
+    author=author,
+    author_email=email,
     packages=['treecut'],
-    scripts=glob('scripts/*.py'),
-    license='BSD',
+    scripts=glob('scripts/*.py') + ["treecut.py"],
+    license=license,
     classifiers=classifiers,
     url='http://github.com/tanghaibao/treecut',
     description="Find nodes in hierarchical clustering that are statistically significant",
-    long_description=open("README.rst").read(),
-    install_requires=['fisher', 'ete2', 'statlib'],
-    )
+    long_description=open("README.md").read(),
+    install_requires=['fisher', 'ete2'],
+)
