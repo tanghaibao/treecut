@@ -23,13 +23,12 @@ before_install:
   - conda install numpy
   - conda install scipy
 
-
   # Useful for debugging any issues with conda
   - conda info -a
 
 # Install packages
 install:
-  - for VERSION in $PYTHON_VERSIONS ; do conda create --name $VERSION --yes python=$VERSION numpy scipy; source activate $VERSION ; python setup.py install; done
+  - for VERSION in $PYTHON_VERSIONS ; do conda create --name $VERSION --yes python=$VERSION --file requirements.txt ; source activate $VERSION ; python setup.py install; done
 
 # command to run tests
 script:
