@@ -4,6 +4,7 @@
 from setuptools import setup
 from glob import glob
 
+name = 'treecut'
 classifiers = [
     'Development Status :: 4 - Beta',
     'Intended Audience :: Science/Research',
@@ -38,16 +39,16 @@ def import_init(filename="__init__.py"):
 author, email, license, version = import_init(filename="treecut/__init__.py")
 
 setup(
-    name="treecut",
+    name=name,
     version=version,
     author=author,
     author_email=email,
-    packages=['treecut'],
+    packages=[name],
     scripts=glob('scripts/*.py') + ["treecut.py"],
     license=license,
     classifiers=classifiers,
     url='http://github.com/tanghaibao/treecut',
     description="Find nodes in hierarchical clustering that are statistically significant",
     long_description=open("README.md").read(),
-    install_requires=['fisher', 'ete2'],
+    install_requires=['numpy', 'fisher', 'ete2'],
 )
