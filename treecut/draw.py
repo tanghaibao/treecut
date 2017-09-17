@@ -164,3 +164,4 @@ class Dendrogram(object):
     def savefig(self, image_name, **kwargs):
 
         self.figure.savefig(image_name, **kwargs)
+        self.figure.clf()

@@ -68,9 +68,9 @@ def test_discrete(a, b):
 def stat_test(a, b, datatype="continuous"):
     """
     >>> stat_test([1,2,3,5,6], [2,5,6,7,8,10])
-    (0.080606370143929906, '3.4')
+    (0.080606370143929851, '3.4')
     >>> stat_test([["1"],["1"],["1"],["1"],["0"]], [["0"],["0"],["0"],["1"],["0"]], datatype="discrete")
-    (0.20634920634920609, '1')
+    (0.20634920634920656, '1')
     """
     func = test_continuous if datatype=="continuous" else test_discrete
     return func(a, b)
