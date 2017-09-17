@@ -7,7 +7,7 @@ this allows easy propagation of P-values either ascending or descending the tree
 """
 
 import sys
-from stats import stat_test, lmean
+from stats import stat_test, mean
 
 
 class ExtTree(list):
@@ -75,7 +75,7 @@ class ExtTree(list):
         for e in self:
             if e.val < min(e.lo_min, e.hi_min, cutoff):
                 if self.datatype=="continuous":
-                    e.desc = "lo" if lmean(e.a) < lmean(e.b) else "hi"
+                    e.desc = "lo" if mean(e.a) < mean(e.b) else "hi"
                 else:
                     e.desc = "enriched"
                 modules.append(e)

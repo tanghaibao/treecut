@@ -45,13 +45,11 @@ A server version of TREECUT software can be found here:
 ## Installation
 
 -   Python version &gt;= 2.6
--   [scipy](http://www.scipy.org/) for t-test:
--   [fisher](http://pypi.python.org/pypi/fisher/) module for calculating
-    Fisher's exact test:
+-   [scipy](http://www.scipy.org/) for t-test and Fisher's Exact Test
 -   [ete2](http://ete.cgenomics.org) for parsing the tree structure
 
 ```bash
-pip install scipy fisher ete2
+pip install scipy ete2
 ```
 
 ## Usage

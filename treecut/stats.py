@@ -8,22 +8,12 @@ Statistical test on the tree nodes, two main tests:
 2. discrete values - returns the smallest p-value for the enrichment of all seen classes
 """
 
-import sys
 import itertools
 import warnings
+from numpy import mean
+from scipy.stats import stats
+
 warnings.simplefilter("ignore")
-
-
-try:
-    from numpy import mean as lmean
-    from scipy.stats.stats import ttest_ind as lttest_ind
-except:
-    print >>sys.stderr, "Install either scipy or for statistics calculations"
-
-try:
-    import fisher
-except:
-    print >>sys.stderr, "Install fisher package (easy_install fisher)"
 
 
 def flatten(x):
@@ -48,10 +38,10 @@ def get_counts(group, category):
 def test_continuous(a, b):
     # simple t-test
     try:
-        p_value = lttest_ind(a, b)[1]
+        p_value = stats.ttest_ind(a, b)[1]
     except:
         p_value = 1
-    return p_value, "%.2g" % lmean(a)
+    return p_value, "%.2g" % mean(a)
 
 
 def test_discrete(a, b):
@@ -65,7 +55,8 @@ def test_discrete(a, b):
         a1, a0 = get_counts(a, category)
         b1, b0 = get_counts(b, category)
         # we are only interested in enrichment, so right_tail
-        pvalue = fisher.pvalue(a1, a0, b1, b0).right_tail
+        oddsratio, pvalue = stats.fisher_exact([[a1, a0], [b1, b0]],
+                            alternative="greater")
         pvalues.append((pvalue, category))
 
     # fisher's exact test plus bonferroni correction of number of tests

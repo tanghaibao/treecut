@@ -50,5 +50,5 @@ setup(
     url='http://github.com/tanghaibao/treecut',
     description="Find nodes in hierarchical clustering that are statistically significant",
     long_description=open("README.md").read(),
-    install_requires=['numpy', 'fisher', 'ete2'],
+    install_requires=['numpy', 'ete2'],
 )
