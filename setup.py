@@ -13,6 +13,8 @@ classifiers = [
     'Programming Language :: Python :: 2',
     'Topic :: Scientific/Engineering :: Bio-Informatics',
     ]
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
 
 
 def import_init(filename="__init__.py"):
@@ -50,5 +52,5 @@ setup(
     url='http://github.com/tanghaibao/treecut',
     description="Find nodes in hierarchical clustering that are statistically significant",
     long_description=open("README.md").read(),
-    install_requires=['numpy', 'ete2'],
+    install_requires=required + ["ete2"],
 )
