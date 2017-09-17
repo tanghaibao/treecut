@@ -45,20 +45,14 @@ A server version of TREECUT software can be found here:
 ## Installation
 
 -   Python version &gt;= 2.6
--   [scipy](http://www.scipy.org/) or
-    [python-statlib](http://code.google.com/p/python-statlib/) module
-    for t-test:
-
-        easy_install statlib
-
+-   [scipy](http://www.scipy.org/) for t-test:
 -   [fisher](http://pypi.python.org/pypi/fisher/) module for calculating
     Fisher's exact test:
+-   [ete2](http://ete.cgenomics.org) for parsing the tree structure
 
-        easy_install fisher
-
--   [ete2](http://ete.cgenomics.org) for parsing the tree structure:
-
-        easy_install ete2
+```bash
+pip install scipy fisher ete2
+```
 
 ## Usage
 
@@ -75,22 +69,28 @@ The `listfile` should contain the quantitative value for each taxon
 (separated by comma). Make sure that the taxon names match between
 `treefile` and `listfile`:
 
-    # continuous example
-    IS13,57.2
-    IS35,66.13
+```
+# continuous example
+IS13,57.2
+IS35,66.13
+```
 
 If the data type is discrete, separate the classes by semicolon. For
 example:
 
-    # discrete example
-    AT1G02150,GO:0009507;GO:0005488
-    AT1G02160,GO:0005575;GO:0003674;GO:0008150
+```
+# discrete example
+AT1G02150,GO:0009507;GO:0005488
+AT1G02160,GO:0005575;GO:0003674;GO:0008150
+```
 
 Note that `#` represents a comment line and will be ignored.
 
 To run the software:
 
-    python treecut.py data/tree.nwk data/continuous.csv tree.pdf
+```bash
+python treecut.py data/tree.nwk data/continuous.csv tree.pdf
+```
 
 A summary of extracted modules will be written to `stdout`. Each row
 will contain a subclade that show either significantly high phenotypic
@@ -114,12 +114,16 @@ the sorghum accessions used in the study. `flowering.assoc` has the
 mapping to the accession to the trait values (in this case the number of
 days until flowering). To run:
 
-    python treecut.py data/flowering.nwk data/flowering.assoc
+```bash
+python treecut.py data/flowering.nwk data/flowering.assoc
+```
 
 If you stead want to treat the flowering data as discrete values, say
 "high" versus low. You can add a `--discrete` option:
 
-    python treecut.py data/flowering.nwk data/flowering_discrete.assoc --discrete flowering_discrete.png
+```bash
+python treecut.py data/flowering.nwk data/flowering_discrete.assoc --discrete flowering_discrete.png
+```
 
 The significant different clades (like extreme trait values) will be
 written to the screen.
@@ -142,13 +146,17 @@ website](http://www.geneontology.org/GO.downloads.annotations.shtml).
 Note that a gene can have multiple GO terms associated with it. Here is
 the script that I used to create the `microarray.assoc`:
 
-    python scripts/parse_tair_go.py
+```bash
+python scripts/parse_tair_go.py
+```
 
 Once everything is set, just run `treecut.py` as usual (make sure to
 turn on the `--discrete` option):
 
-    python scripts/eisen_to_newick.py data/microarray.gtr data/microarray.cdt data/microarray.nwk
-    python treecut.py data/microarray.nwk data/microarray.assoc --discrete
+```bash
+python scripts/eisen_to_newick.py data/microarray.gtr data/microarray.cdt data/microarray.nwk
+python treecut.py data/microarray.nwk data/microarray.assoc --discrete
+```
 
 The clades that are significantly enriched in certain GO terms will be
 written to the screen.
