@@ -1,5 +1,6 @@
 # TREECUT: Dynamic tree cut algorithm
 
+[![Latest PyPI version](https://img.shields.io/pypi/v/treecut.svg)](https://pypi.python.org/pypi/treecut)
 [![Travis-CI](https://travis-ci.org/tanghaibao/treecut.svg?branch=master)](https://travis-ci.org/tanghaibao/treecut)
 
 | | |
