@@ -20,7 +20,7 @@ with open('requirements.txt') as f:
 
 # Use the helper
 h = SetupHelper(initfile="treecut/__init__.py", readmefile="README.md")
-h.check_version(majorv=2, minorv=7)
+h.check_version(name, majorv=2, minorv=7)
 
 setup(
     name=name,
