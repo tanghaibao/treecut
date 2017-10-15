@@ -1,1 +1,1 @@
-include LICENSE* README* setup_helper.py
+include LICENSE* README* requirements.txt setup_helper.py
